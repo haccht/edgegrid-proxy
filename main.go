@@ -33,7 +33,7 @@ func run() error {
 		if fe, ok := err.(*flags.Error); ok && fe.Type == flags.ErrHelp {
 			os.Exit(0)
 		}
-		return err
+		os.Exit(1)
 	}
 
 	edgerc, err := edgegrid.New(
