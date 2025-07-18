@@ -16,7 +16,7 @@ type Options struct {
 	ProxyAddr       string `short:"a" long:"addr" description:"Proxy host address" default:"127.0.0.1:8080"`
 	EdgeGridFile    string `short:"f" long:"file" description:"Location of EdgeGrid file" default:"~/.edgerc"`
 	EdgeGridSection string `short:"s" long:"section" description:"Section of EdgeGrid file" default:"default"`
-	AccountKey      string `long:"key" env:"EDGEGRID_ACCOUNT_KEY" description:"Account switch key"`
+	AccountKey      string `short:"k" long:"key" env:"EDGEGRID_ACCOUNT_KEY" description:"Account switch key"`
 	Host            string `long:"host" env:"EDGEGRID_HOST" description:"EdgeGrid Host"`
 	ClientToken     string `long:"client-token" env:"EDGEGRID_CLIENT_TOKEN" description:"EdgeGrid ClientToken"`
 	ClientSecret    string `long:"client-secret" env:"EDGEGRID_CLIENT_SECRET" description:"EdgeGrid ClientSecret"`
@@ -44,9 +44,6 @@ func run() error {
 		return err
 	}
 
-	if opts.AccountKey != "" {
-		edgerc.AccountKey = opts.AccountKey
-	}
 	if opts.Host != "" {
 		edgerc.Host = opts.Host
 	}
@@ -58,6 +55,9 @@ func run() error {
 	}
 	if opts.AccessToken != "" {
 		edgerc.AccessToken = opts.AccessToken
+	}
+	if opts.AccountKey != "" {
+		edgerc.AccountKey = opts.AccountKey
 	}
 
 	opts.ProxyScheme = "http"
@@ -95,6 +95,11 @@ func run() error {
 		//rewrite redirects
 		resp.Header.Set("Location", u.String())
 		return nil
+	}
+
+	log.Printf("EdgeGrid ClientToken: %s", edgerc.ClientToken)
+	if opts.AccountKey != "" {
+		log.Printf("EdgeGrid AccountSwitchKey: %s", edgerc.AccountKey)
 	}
 
 	log.Printf("Starting EdgeGrid proxy on %s://%s", opts.ProxyScheme, opts.ProxyAddr)
