@@ -36,12 +36,17 @@ func run() error {
 		os.Exit(1)
 	}
 
-	edgerc, err := edgegrid.New(
-		edgegrid.WithFile(opts.EdgeGridFile),
-		edgegrid.WithSection(opts.EdgeGridSection),
-	)
-	if err != nil {
-		return err
+	var edgerc *edgegrid.Config
+	if _, err := os.Stat(opts.EdgeGridFile); err == nil {
+		edgerc, err = edgegrid.New(
+			edgegrid.WithFile(opts.EdgeGridFile),
+			edgegrid.WithSection(opts.EdgeGridSection),
+		)
+		if err != nil {
+			return err
+		}
+	} else {
+		edgerc, _ = edgegrid.New()
 	}
 
 	if opts.Host != "" {
