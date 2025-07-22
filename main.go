@@ -37,9 +37,11 @@ func run() error {
 		os.Exit(1)
 	}
 
-	if egpath, err := homedir.Expand(opts.EdgeGridFile); err == nil {
-		opts.EdgeGridFile = egpath
+	egpath, err := homedir.Expand(opts.EdgeGridFile)
+	if err != nil {
+		return err
 	}
+	opts.EdgeGridFile = egpath
 
 	var edgerc *edgegrid.Config
 	if _, err := os.Stat(opts.EdgeGridFile); err == nil {
@@ -52,25 +54,25 @@ func run() error {
 		}
 	} else {
 		edgerc, _ = edgegrid.New()
-	}
-
-	if opts.Host != "" {
-		edgerc.Host = opts.Host
-	}
-	if opts.ClientToken != "" {
-		edgerc.ClientToken = opts.ClientToken
-	}
-	if opts.ClientSecret != "" {
-		edgerc.ClientSecret = opts.ClientSecret
-	}
-	if opts.AccessToken != "" {
-		edgerc.AccessToken = opts.AccessToken
-	}
-	if opts.AccountKey != "" {
-		edgerc.AccountKey = opts.AccountKey
+		if opts.Host != "" {
+			edgerc.Host = opts.Host
+		}
+		if opts.ClientToken != "" {
+			edgerc.ClientToken = opts.ClientToken
+		}
+		if opts.ClientSecret != "" {
+			edgerc.ClientSecret = opts.ClientSecret
+		}
+		if opts.AccessToken != "" {
+			edgerc.AccessToken = opts.AccessToken
+		}
 	}
 	if edgerc.Host == "" || edgerc.ClientToken == "" || edgerc.ClientSecret == "" || edgerc.AccessToken == "" {
 		return fmt.Errorf("failed to load an edgegrid configuration")
+	}
+
+	if opts.AccountKey != "" {
+		edgerc.AccountKey = opts.AccountKey
 	}
 
 	opts.ProxyScheme = "http"
