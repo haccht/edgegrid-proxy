@@ -14,7 +14,7 @@ import (
 
 type Options struct {
 	ProxyAddr       string `short:"a" long:"addr" description:"Proxy host address" default:"127.0.0.1:8080"`
-	EdgeGridFile    string `short:"f" long:"file" description:"Location of EdgeGrid file" default:"~/.edgerc"`
+	EdgeGridFile    string `short:"r" long:"file" description:"Location of EdgeGrid file" default:"~/.edgerc"`
 	EdgeGridSection string `short:"s" long:"section" description:"Section of EdgeGrid file" default:"default"`
 	AccountKey      string `short:"k" long:"key" env:"EDGEGRID_ACCOUNT_KEY" description:"Account switch key"`
 	Host            string `long:"host" env:"EDGEGRID_HOST" description:"EdgeGrid Host"`

@@ -11,7 +11,7 @@ Usage:
 
 Application Options:
   -a, --addr=          Proxy host address (default: 127.0.0.1:8080)
-  -f, --file=          Location of EdgeGrid file (default: ~/.edgerc)
+  -r, --file=          Location of EdgeGrid file (default: ~/.edgerc)
   -s, --section=       Section of EdgeGrid file (default: default)
       --key=           Account switch key [$EDGEGRID_ACCOUNT_KEY]
       --host=          EdgeGrid Host [$EDGEGRID_HOST]
