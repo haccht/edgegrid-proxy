@@ -10,6 +10,7 @@ import (
 
 	"github.com/akamai/AkamaiOPEN-edgegrid-golang/v11/pkg/edgegrid"
 	"github.com/jessevdk/go-flags"
+	"github.com/mitchellh/go-homedir"
 )
 
 type Options struct {
@@ -34,6 +35,10 @@ func run() error {
 			os.Exit(0)
 		}
 		os.Exit(1)
+	}
+
+	if egpath, err := homedir.Expand(opts.EdgeGridFile); err == nil {
+		opts.EdgeGridFile = egpath
 	}
 
 	var edgerc *edgegrid.Config
@@ -63,6 +68,9 @@ func run() error {
 	}
 	if opts.AccountKey != "" {
 		edgerc.AccountKey = opts.AccountKey
+	}
+	if edgerc.Host == "" || edgerc.ClientToken == "" || edgerc.ClientSecret == "" || edgerc.AccessToken == "" {
+		return fmt.Errorf("failed to load an edgegrid configuration")
 	}
 
 	opts.ProxyScheme = "http"
