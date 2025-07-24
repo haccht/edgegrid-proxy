@@ -41,12 +41,12 @@ func run() error {
 	if err != nil {
 		return err
 	}
-	opts.EdgeGridFile = egpath
 
 	var edgerc *edgegrid.Config
-	if _, err := os.Stat(opts.EdgeGridFile); err == nil {
+	if _, err := os.Stat(egpath); err == nil {
+		log.Printf("Reading the credential in the '%s' section from %s", opts.EdgeGridSection, opts.EdgeGridFile)
 		edgerc, err = edgegrid.New(
-			edgegrid.WithFile(opts.EdgeGridFile),
+			edgegrid.WithFile(egpath),
 			edgegrid.WithSection(opts.EdgeGridSection),
 		)
 		if err != nil {
