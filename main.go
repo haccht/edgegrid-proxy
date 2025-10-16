@@ -24,7 +24,8 @@ type Options struct {
 	AccessToken     string `long:"access-token" env:"EDGEGRID_ACCESS_TOKEN" description:"EdgeGrid AccessToken"`
 	ProxyTLSCert    string `long:"tls-crt" description:"Proxy TLS/SSL certificate file path"`
 	ProxyTLSKey     string `long:"tls-key" description:"Proxy TLS/SSL key file path"`
-	ProxyScheme     string `no-flag:"true"`
+
+	proxyScheme string `no-flag:"true"`
 }
 
 func run() error {
@@ -75,9 +76,9 @@ func run() error {
 		edgerc.AccountKey = opts.AccountKey
 	}
 
-	opts.ProxyScheme = "http"
+	opts.proxyScheme = "http"
 	if opts.ProxyTLSCert != "" && opts.ProxyTLSKey != "" {
-		opts.ProxyScheme = "https"
+		opts.proxyScheme = "https"
 	}
 
 	apiHost := &url.URL{Scheme: "https", Host: edgerc.Host}
@@ -104,7 +105,7 @@ func run() error {
 			return nil
 		}
 
-		u.Scheme = opts.ProxyScheme
+		u.Scheme = opts.proxyScheme
 		u.Host = opts.ProxyAddr
 
 		//rewrite redirects
@@ -117,10 +118,10 @@ func run() error {
 		log.Printf("EdgeGrid AccountSwitchKey: %s", edgerc.AccountKey)
 	}
 
-	log.Printf("Starting EdgeGrid proxy on %s://%s", opts.ProxyScheme, opts.ProxyAddr)
+	log.Printf("Starting EdgeGrid proxy on %s://%s", opts.proxyScheme, opts.ProxyAddr)
 	http.Handle("/", egproxy)
 
-	if opts.ProxyScheme == "https" {
+	if opts.proxyScheme == "https" {
 		return http.ListenAndServeTLS(opts.ProxyAddr, opts.ProxyTLSCert, opts.ProxyTLSKey, nil)
 	}
 	return http.ListenAndServe(opts.ProxyAddr, nil)
