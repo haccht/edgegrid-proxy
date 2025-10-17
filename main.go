@@ -13,7 +13,7 @@ import (
 	"github.com/mitchellh/go-homedir"
 )
 
-type Options struct {
+type options struct {
 	ProxyAddr       string `short:"a" long:"addr" description:"Proxy host address" default:"127.0.0.1:8080"`
 	EdgeGridFile    string `short:"r" long:"file" description:"Location of EdgeGrid file" default:"~/.edgerc"`
 	EdgeGridSection string `short:"s" long:"section" description:"Section of EdgeGrid file" default:"default"`
@@ -28,16 +28,7 @@ type Options struct {
 	proxyScheme string `no-flag:"true"`
 }
 
-func run() error {
-	var opts Options
-	_, err := flags.Parse(&opts)
-	if err != nil {
-		if fe, ok := err.(*flags.Error); ok && fe.Type == flags.ErrHelp {
-			os.Exit(0)
-		}
-		os.Exit(1)
-	}
-
+func run(opts options) error {
 	egpath, err := homedir.Expand(opts.EdgeGridFile)
 	if err != nil {
 		return err
@@ -128,7 +119,16 @@ func run() error {
 }
 
 func main() {
-	if err := run(); err != nil {
+	var opts options
+	_, err := flags.Parse(&opts)
+	if err != nil {
+		if fe, ok := err.(*flags.Error); ok && fe.Type == flags.ErrHelp {
+			os.Exit(0)
+		}
+		os.Exit(1)
+	}
+
+	if err := run(opts); err != nil {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
